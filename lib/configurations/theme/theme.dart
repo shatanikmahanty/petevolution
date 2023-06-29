@@ -50,6 +50,7 @@ class AppTheme {
         bottomNavigationBarLabelTextStyle: const TextStyle(
           fontWeight: FontWeight.bold,
         ),
+        bottomNavigationBarBackgroundSchemeColor: SchemeColor.surface,
       );
 
   static ThemeData get light {
@@ -66,7 +67,7 @@ class AppTheme {
       blendLevel: 9,
       appBarStyle: FlexAppBarStyle.scaffoldBackground,
       visualDensity: FlexColorScheme.comfortablePlatformDensity,
-      useMaterial3: true,
+      useMaterial3: false,
       subThemesData: _commonSubThemeData,
       scaffoldBackground: AppColors.surface,
     );
@@ -90,7 +91,7 @@ class AppTheme {
         decorationColor: AppColors.onPrimaryDark,
       ),
       visualDensity: FlexColorScheme.comfortablePlatformDensity,
-      useMaterial3: true,
+      useMaterial3: false,
       surfaceMode: FlexSurfaceMode.level,
       subThemesData: _commonSubThemeData,
       scaffoldBackground: AppColors.surfaceDark,

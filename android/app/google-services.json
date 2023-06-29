@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "242949772095",
+    "project_id": "pet-evolution-e8c33",
+    "storage_bucket": "pet-evolution-e8c33.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:242949772095:android:6f148d370912c0ee53398a",
+        "android_client_info": {
+          "package_name": "com.shatanik.petevolution"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "242949772095-9hlqgncn8gkt0psbg9r9h552v7bbfshp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDVGLa2E8wFUJJqwlk7g6M5Jrt2qRx0V3Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "242949772095-9hlqgncn8gkt0psbg9r9h552v7bbfshp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

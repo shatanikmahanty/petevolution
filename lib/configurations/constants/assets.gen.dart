@@ -12,26 +12,32 @@ import 'package:flutter/widgets.dart';
 class $AssetsImagesGen {
   const $AssetsImagesGen();
 
-  /// File path: assets/images/dog1.png
-  AssetGenImage get dog1 => const AssetGenImage('assets/images/dog1.png');
+  /// File path: assets/images/bowl.png
+  AssetGenImage get bowl => const AssetGenImage('assets/images/bowl.png');
 
-  /// File path: assets/images/dog10.png
-  AssetGenImage get dog10 => const AssetGenImage('assets/images/dog10.png');
+  /// File path: assets/images/dog_hungry.png
+  AssetGenImage get dogHungry =>
+      const AssetGenImage('assets/images/dog_hungry.png');
 
-  /// File path: assets/images/dog12.png
-  AssetGenImage get dog12 => const AssetGenImage('assets/images/dog12.png');
+  /// File path: assets/images/dog_idle.png
+  AssetGenImage get dogIdle =>
+      const AssetGenImage('assets/images/dog_idle.png');
 
-  /// File path: assets/images/dog2.png
-  AssetGenImage get dog2 => const AssetGenImage('assets/images/dog2.png');
+  /// File path: assets/images/dog_running.png
+  AssetGenImage get dogRunning =>
+      const AssetGenImage('assets/images/dog_running.png');
 
-  /// File path: assets/images/dog24.png
-  AssetGenImage get dog24 => const AssetGenImage('assets/images/dog24.png');
+  /// File path: assets/images/dog_sleeping.png
+  AssetGenImage get dogSleeping =>
+      const AssetGenImage('assets/images/dog_sleeping.png');
 
-  /// File path: assets/images/dog4.png
-  AssetGenImage get dog4 => const AssetGenImage('assets/images/dog4.png');
+  /// File path: assets/images/dog_standing.png
+  AssetGenImage get dogStanding =>
+      const AssetGenImage('assets/images/dog_standing.png');
 
   /// List of all assets
-  List<AssetGenImage> get values => [dog1, dog10, dog12, dog2, dog24, dog4];
+  List<AssetGenImage> get values =>
+      [bowl, dogHungry, dogIdle, dogRunning, dogSleeping, dogStanding];
 }
 
 class Assets {

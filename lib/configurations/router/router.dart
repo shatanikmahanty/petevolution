@@ -19,8 +19,14 @@ class AppRouter extends $AppRouter {
   @override
   final List<AutoRoute> routes = [
     AutoRoute(
+      initial: true,
       path: '/app-home',
       page: AppHomeRoute.page,
+      children: appHomeRoutes,
+    ),
+    AutoRoute(
+      path: '/camera',
+      page: CameraExampleHome.page,
       children: appHomeRoutes,
     ),
   ];
