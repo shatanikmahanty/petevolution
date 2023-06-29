@@ -2,15 +2,14 @@
 
 A pet evolution app using flutter
 
-## Getting Started
+## Setup
 
-This project is a starting point for a Flutter application.
+Run ```flutter pub get``` to install dependencies
+Run ```dart run build_runner build``` to generate files required for build
 
-A few resources to get you started if this is your first Flutter project:
+### Tech Stack
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- Flutter
+- Firebase Storage
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### License - MIT
