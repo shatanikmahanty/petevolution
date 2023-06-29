@@ -22,10 +22,15 @@ class FoodCubit extends HydratedCubit<FoodState> with CubitMaybeEmit {
   }
 
   Future<void> loadFoodList() async {
-    print('HERE');
     emit(state.copyWith(isLoading: true));
-    List<String> foodList = [];
-    await Future.delayed(const Duration(seconds: 2));
+    final foodList = <String>[];
+    foodList
+      ..add(
+        'https://pngimg.com/uploads/dog_food/dog_food_PNG3.png',
+      )
+      ..add(
+        'https://www.pngkey.com/png/full/112-1121805_food-bag-dr-garys-best-breed-dog-food.png',
+      );
     emit(
       state.copyWith(
         availableFood: foodList,
