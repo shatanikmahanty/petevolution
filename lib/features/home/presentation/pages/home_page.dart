@@ -6,7 +6,6 @@ import 'package:petevolution/configurations/configurations.dart';
 import 'package:petevolution/configurations/constants/assets.gen.dart';
 import 'package:petevolution/features/camera/bloc/camera_cubit.dart';
 import 'package:petevolution/features/home/bloc/dog_bloc.dart';
-import 'package:petevolution/features/home/bloc/food_cubit.dart';
 import 'package:petevolution/features/home/home.dart';
 import 'package:petevolution/features/home/presentation/animated_running_dog.dart';
 import 'package:petevolution/features/xp/bloc/xp_cubit.dart';
@@ -96,38 +95,35 @@ class HomePage extends StatelessWidget {
                         return image;
                       },
                     ),
-                    BlocProvider<FoodCubit>(
-                      create: (_) => FoodCubit(),
-                      child: Column(
-                        children: [
-                          _Heading(
-                            heading: 'Food',
-                            trailing: BlocBuilder<CameraCubit, CameraState>(
-                              builder: (context, state) {
-                                if (state.isLoading) {
-                                  return const Offstage();
-                                }
-                                return IconButton(
-                                  onPressed: () {
-                                    if (state.availableCameras.isEmpty) {
-                                      DjangoflowAppSnackbar.showError(
-                                        'No Cameras found in device',
-                                      );
-                                    }
-                                    context
-                                        .read<CameraCubit>()
-                                        .clearCapturedImage();
-                                    context.router
-                                        .push(const CameraExampleHome());
-                                  },
-                                  icon: const Icon(Icons.add),
-                                );
-                              },
-                            ),
+                    Column(
+                      children: [
+                        _Heading(
+                          heading: 'Food',
+                          trailing: BlocBuilder<CameraCubit, CameraState>(
+                            builder: (context, state) {
+                              if (state.isLoading) {
+                                return const Offstage();
+                              }
+                              return IconButton(
+                                onPressed: () {
+                                  if (state.availableCameras.isEmpty) {
+                                    DjangoflowAppSnackbar.showError(
+                                      'No Cameras found in device',
+                                    );
+                                  }
+                                  context
+                                      .read<CameraCubit>()
+                                      .clearCapturedImage();
+                                  context.router
+                                      .push(const CameraExampleHome());
+                                },
+                                icon: const Icon(Icons.add),
+                              );
+                            },
                           ),
-                          const FoodList(),
-                        ],
-                      ),
+                        ),
+                        const FoodList(),
+                      ],
                     ),
                     _Heading(
                       heading: 'Stats',

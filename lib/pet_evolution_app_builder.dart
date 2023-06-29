@@ -1,6 +1,7 @@
 import 'package:djangoflow_app/djangoflow_app.dart';
 import 'package:djangoflow_app_links/djangoflow_app_links.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,6 +9,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:petevolution/configurations/configurations.dart';
 import 'package:petevolution/features/app/app.dart';
 import 'package:petevolution/features/camera/bloc/camera_cubit.dart';
+import 'package:petevolution/features/home/bloc/food_cubit.dart';
 import 'package:petevolution/firebase_options.dart';
 
 class PetEvolutionAppBuilder extends AppBuilder {
@@ -29,6 +31,11 @@ class PetEvolutionAppBuilder extends AppBuilder {
             RepositoryProvider<AppLinksRepository>.value(
               value: appLinksRepository,
             ),
+            RepositoryProvider<FirebaseStorageRepository>(
+              create: (context) => FirebaseStorageRepository(
+                FirebaseStorage.instance,
+              ),
+            ),
           ],
           providers: [
             BlocProvider<AppCubit>(
@@ -43,6 +50,11 @@ class PetEvolutionAppBuilder extends AppBuilder {
                 context.read<AppLinksRepository>(),
               ),
               lazy: false,
+            ),
+            BlocProvider<FoodCubit>(
+              create: (context) => FoodCubit(
+                context.read<FirebaseStorageRepository>(),
+              ),
             ),
           ],
           builder: (context) => AppCubitConsumer(

@@ -1,9 +1,14 @@
+import 'dart:io';
+
 import 'package:camera/camera.dart';
 import 'package:djangoflow_app/djangoflow_app.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:petevolution/configurations/configurations.dart';
+import 'package:petevolution/features/app/data/repositories/firebase_storage_repository.dart';
 import 'package:petevolution/features/camera/bloc/camera_cubit.dart';
+import 'package:petevolution/features/home/bloc/food_cubit.dart';
+import 'package:progress_builder/progress_builder.dart';
 
 class CaptureControls extends StatefulWidget {
   const CaptureControls({
@@ -27,11 +32,25 @@ class _CaptureControlsState extends State<CaptureControls> {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: imageFile != null
           ? [
-              _CaptureControl(
-                onTap: widget.cameraController == null
-                    ? null
-                    : onPausePreviewButtonPressed,
-                icon: Icons.done,
+              CircularProgressBuilder(
+                builder: (context, action, error) => _CaptureControl(
+                  onTap: action,
+                  icon: Icons.done,
+                ),
+                action: (progressCallback) async {
+                  final foodCubit = context.read<FoodCubit>();
+                  final downloadUrl = await context
+                      .read<FirebaseStorageRepository>()
+                      .uploadFile(
+                        kDogFoodImagesPath,
+                        File(imageFile!.path),
+                      );
+                  foodCubit.addFood(downloadUrl);
+                },
+                onSuccess: () {
+                  DjangoflowAppSnackbar.showInfo('Meal added!');
+                  context.router.pop();
+                },
               ),
             ]
           : [

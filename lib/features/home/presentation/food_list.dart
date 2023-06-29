@@ -54,7 +54,7 @@ class FoodList extends StatelessWidget {
                     children: [
                       Assets.images.bowl.image(fit: BoxFit.fill),
                       Positioned(
-                        bottom: kPadding * 3,
+                        bottom: kPadding * 4,
                         child: CachedNetworkImage(
                           imageUrl: state.availableFood![index],
                           height: kPadding * 8,

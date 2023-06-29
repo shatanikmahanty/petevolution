@@ -1,5 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
+import 'package:petevolution/configurations/configurations.dart';
+import 'package:petevolution/features/app/app.dart';
 import 'package:petevolution/utils/mixins/cubit_maybe_emit_mixin.dart';
 
 part 'food_cubit.freezed.dart';
@@ -17,20 +19,24 @@ class FoodState with _$FoodState {
 }
 
 class FoodCubit extends HydratedCubit<FoodState> with CubitMaybeEmit {
-  FoodCubit() : super(const FoodState()) {
+  final FirebaseStorageRepository _firebaseStorageRepository;
+
+  FoodCubit(this._firebaseStorageRepository) : super(const FoodState()) {
     loadFoodList();
   }
 
   Future<void> loadFoodList() async {
     emit(state.copyWith(isLoading: true));
     final foodList = <String>[];
-    foodList
-      ..add(
-        'https://pngimg.com/uploads/dog_food/dog_food_PNG3.png',
-      )
-      ..add(
-        'https://www.pngkey.com/png/full/112-1121805_food-bag-dr-garys-best-breed-dog-food.png',
-      );
+
+    final foodListRef =
+        await _firebaseStorageRepository.listAll(kDogFoodImagesPath);
+
+    for (final foodRef in foodListRef.items) {
+      final downloadUrl = await foodRef.getDownloadURL();
+      foodList.add(downloadUrl);
+    }
+
     emit(
       state.copyWith(
         availableFood: foodList,
@@ -44,4 +50,14 @@ class FoodCubit extends HydratedCubit<FoodState> with CubitMaybeEmit {
 
   @override
   Map<String, dynamic>? toJson(FoodState state) => state.toJson();
+
+  void addFood(String downloadUrl) {
+    final foodList = List<String>.from(state.availableFood ?? []);
+    foodList.add(downloadUrl);
+    emit(
+      state.copyWith(
+        availableFood: foodList,
+      ),
+    );
+  }
 }
