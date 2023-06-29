@@ -28,7 +28,13 @@ class HomePage extends StatelessWidget {
             create: (context) => FoodCubit(),
             child: Column(
               children: [
-                const _Heading(heading: 'Food'),
+                _Heading(
+                  heading: 'Food',
+                  trailing: IconButton(
+                    onPressed: () {},
+                    icon: const Icon(Icons.add),
+                  ),
+                ),
                 const FoodList(),
               ],
             ),
@@ -146,23 +152,33 @@ class CustomTrackShape extends RoundedRectSliderTrackShape {
 }
 
 class _Heading extends StatelessWidget {
-  const _Heading({required this.heading});
+  const _Heading({required this.heading, this.trailing});
 
   final String heading;
+  final Widget? trailing;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: kPadding * 2),
-      alignment: Alignment.topLeft,
-      child: Text(
-        heading,
-        style: theme.textTheme.titleLarge?.copyWith(
-          fontWeight: FontWeight.bold,
-        ),
+    final headingText = Text(
+      heading,
+      style: theme.textTheme.titleLarge?.copyWith(
+        fontWeight: FontWeight.bold,
       ),
     );
+
+    return Container(
+        padding: const EdgeInsets.symmetric(horizontal: kPadding * 2),
+        alignment: Alignment.topLeft,
+        child: trailing == null
+            ? headingText
+            : Row(
+                children: [
+                  headingText,
+                  const Spacer(),
+                  trailing!,
+                ],
+              ));
   }
 }
