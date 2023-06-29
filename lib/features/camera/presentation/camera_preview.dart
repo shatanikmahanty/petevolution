@@ -13,7 +13,7 @@ class CameraPreviewWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    if (controller == null || controller?.value == null) {
+    if (controller == null || !controller!.value.isInitialized) {
       return const Text('Preparing Camera...');
     } else {
       String? capturedImagePath = imagePath;
