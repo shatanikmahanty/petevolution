@@ -3,8 +3,8 @@ import 'package:petevolution/configurations/configurations.dart';
 final appHomeRoutes = [
   AutoRoute(
     initial: true,
-    path: 'home',
-    page: HomeRoute.page,
+    path: 'activities',
+    page: ActivitiesRoute.page,
   ),
   AutoRoute(
     path: 'profile',

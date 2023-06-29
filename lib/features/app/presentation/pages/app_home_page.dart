@@ -10,7 +10,7 @@ class AppHomePage extends StatelessWidget with AutoRouteWrapper {
   @override
   Widget build(BuildContext context) => AutoTabsScaffold(
         routes: const [
-          HomeRoute(),
+          ActivitiesRoute(),
           ProfileRoute(),
         ],
         transitionBuilder: (context, child, animation) {
@@ -62,11 +62,11 @@ class AppHomePage extends StatelessWidget with AutoRouteWrapper {
                       padding: iconPadding,
                       child: Icon(
                         tabsRouter.activeIndex == 0
-                            ? Icons.rice_bowl
-                            : Icons.rice_bowl_outlined,
+                            ? Icons.extension
+                            : Icons.extension_outlined,
                       ),
                     ),
-                    label: 'Feed',
+                    label: 'Activities',
                   ),
                   BottomNavigationBarItem(
                     icon: Padding(
@@ -89,7 +89,7 @@ class AppHomePage extends StatelessWidget with AutoRouteWrapper {
   String getAppBarTextFromIndex(int index) {
     switch (index) {
       case 0:
-        return 'Feed';
+        return 'Activities';
 
       case 1:
         return 'Profile';

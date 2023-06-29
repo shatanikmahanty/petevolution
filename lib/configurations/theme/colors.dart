@@ -76,7 +76,7 @@ class AppColors {
   static const Color onErrorContainer = Color(0xff400013);
   static const Color background = Color(0xffFEFBFF);
   static const Color onBackground = Color(0xff1B1B1F);
-  static const Color surface = Color(0xffFEFBFF);
+  static const Color surface = Color(0xffFFFFFF);
   static const Color onSurface = Color(0xff1B1B1F);
   static const Color surfaceVariant = Color(0xffE1E2EC);
   static const Color onSurfaceVariant = Color(0xff44474F);

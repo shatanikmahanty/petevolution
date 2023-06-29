@@ -9,9 +9,9 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:auto_route/auto_route.dart' as _i4;
-import 'package:petevolution/features/app/presentation/pages/app_home_page.dart'
+import 'package:petevolution/features/activities/presentation/pages/activities_page.dart'
     deferred as _i1;
-import 'package:petevolution/features/home/presentation/pages/home_page.dart'
+import 'package:petevolution/features/app/presentation/pages/app_home_page.dart'
     deferred as _i2;
 import 'package:petevolution/features/profile/presentation/pages/profile_page.dart'
     deferred as _i3;
@@ -21,21 +21,21 @@ abstract class $AppRouter extends _i4.RootStackRouter {
 
   @override
   final Map<String, _i4.PageFactory> pagesMap = {
-    AppHomeRoute.name: (routeData) {
+    ActivitiesRoute.name: (routeData) {
       return _i4.AutoRoutePage<dynamic>(
         routeData: routeData,
         child: _i4.DeferredWidget(
           _i1.loadLibrary,
-          () => _i4.WrappedRoute(child: _i1.AppHomePage()),
+          () => _i1.ActivitiesPage(),
         ),
       );
     },
-    HomeRoute.name: (routeData) {
+    AppHomeRoute.name: (routeData) {
       return _i4.AutoRoutePage<dynamic>(
         routeData: routeData,
         child: _i4.DeferredWidget(
           _i2.loadLibrary,
-          () => _i2.HomePage(),
+          () => _i4.WrappedRoute(child: _i2.AppHomePage()),
         ),
       );
     },
@@ -52,7 +52,21 @@ abstract class $AppRouter extends _i4.RootStackRouter {
 }
 
 /// generated route for
-/// [_i1.AppHomePage]
+/// [_i1.ActivitiesPage]
+class ActivitiesRoute extends _i4.PageRouteInfo<void> {
+  const ActivitiesRoute({List<_i4.PageRouteInfo>? children})
+      : super(
+          ActivitiesRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'ActivitiesRoute';
+
+  static const _i4.PageInfo<void> page = _i4.PageInfo<void>(name);
+}
+
+/// generated route for
+/// [_i2.AppHomePage]
 class AppHomeRoute extends _i4.PageRouteInfo<void> {
   const AppHomeRoute({List<_i4.PageRouteInfo>? children})
       : super(
@@ -61,20 +75,6 @@ class AppHomeRoute extends _i4.PageRouteInfo<void> {
         );
 
   static const String name = 'AppHomeRoute';
-
-  static const _i4.PageInfo<void> page = _i4.PageInfo<void>(name);
-}
-
-/// generated route for
-/// [_i2.HomePage]
-class HomeRoute extends _i4.PageRouteInfo<void> {
-  const HomeRoute({List<_i4.PageRouteInfo>? children})
-      : super(
-          HomeRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'HomeRoute';
 
   static const _i4.PageInfo<void> page = _i4.PageInfo<void>(name);
 }
