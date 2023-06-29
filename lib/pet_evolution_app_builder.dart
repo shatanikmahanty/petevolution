@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:petevolution/configurations/configurations.dart';
 import 'package:petevolution/features/app/app.dart';
+import 'package:petevolution/features/camera/bloc/camera_cubit.dart';
 
 class PetEvolutionAppBuilder extends AppBuilder {
   PetEvolutionAppBuilder({
@@ -24,6 +25,9 @@ class PetEvolutionAppBuilder extends AppBuilder {
           providers: [
             BlocProvider<AppCubit>(
               create: (context) => AppCubit.instance,
+            ),
+            BlocProvider<CameraCubit>(
+              create: (context) => CameraCubit(),
             ),
             BlocProvider<AppLinksCubit>(
               create: (context) => AppLinksCubit(

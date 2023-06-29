@@ -47,7 +47,7 @@ class FoodList extends StatelessWidget {
                     width: kPadding * 14,
                     fit: BoxFit.contain,
                   ),
-                  childWhenDragging: const Offstage(),
+                  // childWhenDragging: const Offstage(),
                   child: Stack(
                     alignment: Alignment.bottomCenter,
                     children: [

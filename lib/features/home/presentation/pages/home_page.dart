@@ -1,8 +1,10 @@
+import 'package:djangoflow_app/djangoflow_app.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:petevolution/configurations/configurations.dart';
 import 'package:petevolution/configurations/constants/assets.gen.dart';
+import 'package:petevolution/features/camera/bloc/camera_cubit.dart';
 import 'package:petevolution/features/home/bloc/food_cubit.dart';
 import 'package:petevolution/features/home/home.dart';
 
@@ -25,14 +27,29 @@ class HomePage extends StatelessWidget {
             fit: BoxFit.contain,
           ),
           BlocProvider<FoodCubit>(
-            create: (context) => FoodCubit(),
+            create: (_) => FoodCubit(),
             child: Column(
               children: [
                 _Heading(
                   heading: 'Food',
-                  trailing: IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.add),
+                  trailing: BlocBuilder<CameraCubit, CameraState>(
+                    builder: (context, state) {
+                      if (state.isLoading) {
+                        return const Offstage();
+                      }
+                      return IconButton(
+                        onPressed: () {
+                          if (state.availableCameras.isEmpty) {
+                            DjangoflowAppSnackbar.showError(
+                              'No Cameras found in device',
+                            );
+                          }
+                          context.read<CameraCubit>().clearCapturedImage();
+                          context.router.push(const CameraExampleHome());
+                        },
+                        icon: const Icon(Icons.add),
+                      );
+                    },
                   ),
                 ),
                 const FoodList(),
