@@ -9,6 +9,8 @@ import 'package:petevolution/features/home/bloc/dog_bloc.dart';
 import 'package:petevolution/features/home/bloc/food_cubit.dart';
 import 'package:petevolution/features/home/home.dart';
 import 'package:petevolution/features/home/presentation/animated_running_dog.dart';
+import 'package:petevolution/features/xp/bloc/xp_cubit.dart';
+import 'package:petevolution/features/xp/xp.dart';
 
 @RoutePage()
 class HomePage extends StatelessWidget {
@@ -19,8 +21,15 @@ class HomePage extends StatelessWidget {
     final size = MediaQuery.of(context).size;
     final theme = Theme.of(context);
 
-    return BlocProvider(
-      create: (context) => DogBloc(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<DogBloc>(
+          create: (context) => DogBloc(),
+        ),
+        BlocProvider<XpCubit>(
+          create: (context) => XpCubit(),
+        ),
+      ],
       child: Builder(
           builder: (context) => SingleChildScrollView(
                 padding: const EdgeInsets.all(kPadding * 2),
@@ -31,9 +40,13 @@ class HomePage extends StatelessWidget {
                         late AssetGenImage dogImage;
                         const assetImages = Assets.images;
                         bool isRunningDog = false;
+
+                        bool canFeed = false;
+
                         state.when(
                           initial: () {
                             dogImage = assetImages.dogIdle;
+                            canFeed = true;
                           },
                           running: () {
                             isRunningDog = true;
@@ -49,15 +62,37 @@ class HomePage extends StatelessWidget {
                           },
                         );
 
-                        if (isRunningDog) {
-                          return const AnimatedDog();
+                        final image = isRunningDog
+                            ? const AnimatedDog()
+                            : dogImage.image(
+                                width: size.width / 2,
+                                height: size.width / 2,
+                                fit: BoxFit.contain,
+                              );
+
+                        if (canFeed) {
+                          return DragTarget<int>(
+                            builder: (
+                              context,
+                              candidateData,
+                              rejectedData,
+                            ) =>
+                                image,
+                            onAccept: (details) async {
+                              final dogBloc = context.read<DogBloc>();
+
+                              dogBloc.add(const DogEvent.eat());
+                              context.read<XpCubit>().awardXP(15);
+                              await Future.delayed(
+                                const Duration(seconds: 2),
+                              );
+
+                              dogBloc.add(const DogEvent.reset());
+                            },
+                            onWillAccept: (data) => canFeed,
+                          );
                         }
 
-                        final image = dogImage.image(
-                          width: size.width / 2,
-                          height: size.width / 2,
-                          fit: BoxFit.contain,
-                        );
                         return image;
                       },
                     ),
@@ -94,7 +129,18 @@ class HomePage extends StatelessWidget {
                         ],
                       ),
                     ),
-                    const _Heading(heading: 'Stats'),
+                    _Heading(
+                      heading: 'Stats',
+                      trailing: Chip(
+                        label: Text(
+                          'Lvl ${context.watch<XpCubit>().state.currentLevel}',
+                          style: theme.textTheme.titleSmall?.copyWith(
+                            color: theme.colorScheme.primary,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
                     Padding(
                       padding:
                           const EdgeInsets.symmetric(horizontal: kPadding * 2)
@@ -102,74 +148,10 @@ class HomePage extends StatelessWidget {
                         bottom: kPadding * 2,
                         top: kPadding,
                       ),
-                      child: Card(
-                        color: Colors.white,
-                        elevation: kPadding / 1.5,
-                        shadowColor: theme.primaryColor,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: kPadding * 3,
-                            vertical: kPadding * 2,
-                          ),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Icon(
-                                FontAwesomeIcons.bolt,
-                                size: kPadding * 5,
-                                color: theme.primaryColor,
-                              ),
-                              const SizedBox(
-                                width: kPadding * 4,
-                              ),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Text(
-                                          'XP',
-                                          style: theme.textTheme.titleMedium
-                                              ?.copyWith(
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        const Spacer(),
-                                        Text(
-                                          '75/100',
-                                          style: theme.textTheme.titleMedium
-                                              ?.copyWith(
-                                            fontWeight: FontWeight.bold,
-                                            color: theme.primaryColor,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(
-                                      height: kPadding / 2,
-                                    ),
-                                    SliderTheme(
-                                      data: SliderThemeData(
-                                        trackShape: CustomTrackShape(),
-                                      ),
-                                      child: Slider(
-                                        value: 75,
-                                        max: 100,
-                                        min: 0,
-                                        onChanged: (value) {},
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
                     ),
+                    const XpCard(),
                     PetActivity(
-                      xp: '5',
+                      xp: '15',
                       name: 'Feed',
                       icon: FontAwesomeIcons.bowlRice,
                       interactionIcon: Icons.info_outline,
@@ -201,6 +183,7 @@ class HomePage extends StatelessWidget {
                               context
                                   .read<DogBloc>()
                                   .add(const DogEvent.reset());
+                              context.read<XpCubit>().awardXP(10);
                             },
                             initial: () {
                               context.read<DogBloc>().add(const DogEvent.run());
@@ -219,23 +202,6 @@ class HomePage extends StatelessWidget {
                 ),
               )),
     );
-  }
-}
-
-class CustomTrackShape extends RoundedRectSliderTrackShape {
-  @override
-  Rect getPreferredRect({
-    required RenderBox parentBox,
-    Offset offset = Offset.zero,
-    required SliderThemeData sliderTheme,
-    bool isEnabled = false,
-    bool isDiscrete = false,
-  }) {
-    final trackHeight = sliderTheme.trackHeight ?? 0;
-    final trackLeft = offset.dx;
-    final trackTop = offset.dy + (parentBox.size.height - trackHeight) / 2;
-    final double trackWidth = parentBox.size.width;
-    return Rect.fromLTWH(trackLeft, trackTop, trackWidth, trackHeight);
   }
 }
 

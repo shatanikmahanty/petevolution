@@ -41,6 +41,7 @@ class FoodList extends StatelessWidget {
               child: ListView.builder(
                 padding: const EdgeInsets.only(top: kPadding * 3),
                 itemBuilder: (context, index) => LongPressDraggable<int>(
+                  data: 0,
                   feedback: CachedNetworkImage(
                     imageUrl: state.availableFood![index],
                     height: kPadding * 10,
