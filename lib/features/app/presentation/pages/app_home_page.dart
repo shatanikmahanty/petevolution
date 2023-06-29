@@ -10,7 +10,7 @@ class AppHomePage extends StatelessWidget with AutoRouteWrapper {
   @override
   Widget build(BuildContext context) => AutoTabsScaffold(
         routes: const [
-          ActivitiesRoute(),
+          HomeRoute(),
           ProfileRoute(),
         ],
         transitionBuilder: (context, child, animation) {
