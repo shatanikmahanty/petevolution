@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:petevolution/configurations/configurations.dart';
 import 'package:petevolution/configurations/constants/assets.gen.dart';
+import 'package:petevolution/features/home/bloc/food_cubit.dart';
 import 'package:petevolution/features/home/home.dart';
 
 @RoutePage()
@@ -22,12 +24,14 @@ class HomePage extends StatelessWidget {
             height: size.width / 2,
             fit: BoxFit.contain,
           ),
-          const _Heading(heading: 'Food'),
-          Container(
-            padding: const EdgeInsets.only(top: kPadding * 3),
-            height: kPadding * 16,
-            width: double.infinity,
-            child: const FoodList(),
+          BlocProvider<FoodCubit>(
+            create: (context) => FoodCubit(),
+            child: Column(
+              children: [
+                const _Heading(heading: 'Food'),
+                const FoodList(),
+              ],
+            ),
           ),
           const _Heading(heading: 'Stats'),
           Padding(
