@@ -9,6 +9,7 @@ class PetActivity extends StatelessWidget {
     required this.icon,
     this.onPressed,
     this.isActive = false,
+    this.interactionIcon,
   });
 
   final String xp;
@@ -16,6 +17,7 @@ class PetActivity extends StatelessWidget {
   final IconData icon;
   final VoidCallback? onPressed;
   final bool isActive;
+  final IconData? interactionIcon;
 
   @override
   Widget build(BuildContext context) {
@@ -81,7 +83,7 @@ class PetActivity extends StatelessWidget {
                   IconButton(
                     onPressed: onPressed,
                     icon: Icon(
-                      Icons.play_circle_outline_rounded,
+                      interactionIcon ?? Icons.play_circle_outline_rounded,
                       size: kPadding * 4,
                       color: theme.primaryColor,
                     ),

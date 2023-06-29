@@ -5,8 +5,10 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:petevolution/configurations/configurations.dart';
 import 'package:petevolution/configurations/constants/assets.gen.dart';
 import 'package:petevolution/features/camera/bloc/camera_cubit.dart';
+import 'package:petevolution/features/home/bloc/dog_bloc.dart';
 import 'package:petevolution/features/home/bloc/food_cubit.dart';
 import 'package:petevolution/features/home/home.dart';
+import 'package:petevolution/features/home/presentation/animated_running_dog.dart';
 
 @RoutePage()
 class HomePage extends StatelessWidget {
@@ -17,136 +19,205 @@ class HomePage extends StatelessWidget {
     final size = MediaQuery.of(context).size;
     final theme = Theme.of(context);
 
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(kPadding * 2),
-      child: Column(
-        children: [
-          Assets.images.dogIdle.image(
-            width: size.width / 2,
-            height: size.width / 2,
-            fit: BoxFit.contain,
-          ),
-          BlocProvider<FoodCubit>(
-            create: (_) => FoodCubit(),
-            child: Column(
-              children: [
-                _Heading(
-                  heading: 'Food',
-                  trailing: BlocBuilder<CameraCubit, CameraState>(
-                    builder: (context, state) {
-                      if (state.isLoading) {
-                        return const Offstage();
-                      }
-                      return IconButton(
-                        onPressed: () {
-                          if (state.availableCameras.isEmpty) {
-                            DjangoflowAppSnackbar.showError(
-                              'No Cameras found in device',
-                            );
-                          }
-                          context.read<CameraCubit>().clearCapturedImage();
-                          context.router.push(const CameraExampleHome());
-                        },
-                        icon: const Icon(Icons.add),
-                      );
-                    },
-                  ),
-                ),
-                const FoodList(),
-              ],
-            ),
-          ),
-          const _Heading(heading: 'Stats'),
-          Padding(
-            padding:
-                const EdgeInsets.symmetric(horizontal: kPadding * 2).copyWith(
-              bottom: kPadding * 2,
-              top: kPadding,
-            ),
-            child: Card(
-              color: Colors.white,
-              elevation: kPadding / 1.5,
-              shadowColor: theme.primaryColor,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: kPadding * 3,
-                  vertical: kPadding * 2,
-                ),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
+    return BlocProvider(
+      create: (context) => DogBloc(),
+      child: Builder(
+          builder: (context) => SingleChildScrollView(
+                padding: const EdgeInsets.all(kPadding * 2),
+                child: Column(
                   children: [
-                    Icon(
-                      FontAwesomeIcons.heartCircleBolt,
-                      size: kPadding * 5,
-                      color: theme.primaryColor,
+                    BlocBuilder<DogBloc, DogState>(
+                      builder: (context, state) {
+                        late AssetGenImage dogImage;
+                        const assetImages = Assets.images;
+                        bool isRunningDog = false;
+                        state.when(
+                          initial: () {
+                            dogImage = assetImages.dogIdle;
+                          },
+                          running: () {
+                            isRunningDog = true;
+                          },
+                          sleeping: (_) {
+                            dogImage = assetImages.dogSleeping;
+                          },
+                          eating: () {
+                            dogImage = assetImages.dogHungry;
+                          },
+                          standing: () {
+                            dogImage = assetImages.dogStanding;
+                          },
+                        );
+
+                        if (isRunningDog) {
+                          return const AnimatedDog();
+                        }
+
+                        final image = dogImage.image(
+                          width: size.width / 2,
+                          height: size.width / 2,
+                          fit: BoxFit.contain,
+                        );
+                        return image;
+                      },
                     ),
-                    const SizedBox(
-                      width: kPadding * 4,
-                    ),
-                    Expanded(
+                    BlocProvider<FoodCubit>(
+                      create: (_) => FoodCubit(),
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Row(
-                            children: [
-                              Text(
-                                'Health',
-                                style: theme.textTheme.titleMedium?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              const Spacer(),
-                              Text(
-                                '75',
-                                style: theme.textTheme.titleMedium?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  color: theme.primaryColor,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(
-                            height: kPadding / 2,
-                          ),
-                          SliderTheme(
-                            data: SliderThemeData(
-                              trackShape: CustomTrackShape(),
-                            ),
-                            child: Slider(
-                              value: 75,
-                              max: 100,
-                              min: 0,
-                              onChanged: (value) {},
+                          _Heading(
+                            heading: 'Food',
+                            trailing: BlocBuilder<CameraCubit, CameraState>(
+                              builder: (context, state) {
+                                if (state.isLoading) {
+                                  return const Offstage();
+                                }
+                                return IconButton(
+                                  onPressed: () {
+                                    if (state.availableCameras.isEmpty) {
+                                      DjangoflowAppSnackbar.showError(
+                                        'No Cameras found in device',
+                                      );
+                                    }
+                                    context
+                                        .read<CameraCubit>()
+                                        .clearCapturedImage();
+                                    context.router
+                                        .push(const CameraExampleHome());
+                                  },
+                                  icon: const Icon(Icons.add),
+                                );
+                              },
                             ),
                           ),
+                          const FoodList(),
                         ],
                       ),
-                    )
+                    ),
+                    const _Heading(heading: 'Stats'),
+                    Padding(
+                      padding:
+                          const EdgeInsets.symmetric(horizontal: kPadding * 2)
+                              .copyWith(
+                        bottom: kPadding * 2,
+                        top: kPadding,
+                      ),
+                      child: Card(
+                        color: Colors.white,
+                        elevation: kPadding / 1.5,
+                        shadowColor: theme.primaryColor,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: kPadding * 3,
+                            vertical: kPadding * 2,
+                          ),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Icon(
+                                FontAwesomeIcons.bolt,
+                                size: kPadding * 5,
+                                color: theme.primaryColor,
+                              ),
+                              const SizedBox(
+                                width: kPadding * 4,
+                              ),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Text(
+                                          'XP',
+                                          style: theme.textTheme.titleMedium
+                                              ?.copyWith(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        const Spacer(),
+                                        Text(
+                                          '75/100',
+                                          style: theme.textTheme.titleMedium
+                                              ?.copyWith(
+                                            fontWeight: FontWeight.bold,
+                                            color: theme.primaryColor,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(
+                                      height: kPadding / 2,
+                                    ),
+                                    SliderTheme(
+                                      data: SliderThemeData(
+                                        trackShape: CustomTrackShape(),
+                                      ),
+                                      child: Slider(
+                                        value: 75,
+                                        max: 100,
+                                        min: 0,
+                                        onChanged: (value) {},
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    PetActivity(
+                      xp: '5',
+                      name: 'Feed',
+                      icon: FontAwesomeIcons.bowlRice,
+                      interactionIcon: Icons.info_outline,
+                      onPressed: () {
+                        DjangoflowAppSnackbar.showInfo(
+                          'Long tap on a food an drag towards pet to feed',
+                        );
+                      },
+                    ),
+                    Container(
+                      height: kPadding / 3,
+                      margin:
+                          const EdgeInsets.symmetric(horizontal: kPadding * 2),
+                      width: double.infinity,
+                      color: theme.primaryColor.withOpacity(0.1),
+                    ),
+                    BlocBuilder<DogBloc, DogState>(
+                      builder: (context, state) => PetActivity(
+                        xp: '10',
+                        name: 'Run',
+                        icon: Icons.pets,
+                        isActive: state.maybeWhen(
+                          running: () => true,
+                          orElse: () => false,
+                        ),
+                        onPressed: () {
+                          state.maybeWhen(
+                            running: () {
+                              context
+                                  .read<DogBloc>()
+                                  .add(const DogEvent.reset());
+                            },
+                            initial: () {
+                              context.read<DogBloc>().add(const DogEvent.run());
+                            },
+                            orElse: () {
+                              DjangoflowAppSnackbar.showInfo('Can\'t Run Now');
+                            },
+                          );
+                        },
+                        interactionIcon: state.whenOrNull(
+                          running: () => Icons.stop,
+                        ),
+                      ),
+                    ),
                   ],
                 ),
-              ),
-            ),
-          ),
-          const PetActivity(
-            xp: '5',
-            name: 'Feed',
-            icon: FontAwesomeIcons.bowlRice,
-            isActive: true,
-          ),
-          Container(
-            height: kPadding / 3,
-            margin: const EdgeInsets.symmetric(horizontal: kPadding * 2),
-            width: double.infinity,
-            color: theme.primaryColor.withOpacity(0.1),
-          ),
-          PetActivity(
-            xp: '5',
-            name: 'Walk',
-            icon: Icons.pets,
-            onPressed: () {},
-          ),
-        ],
-      ),
+              )),
     );
   }
 }
